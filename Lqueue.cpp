@@ -37,9 +37,10 @@ template <typename T>
 
 Lqueue<T>:: Lqueue(const T& val)
 {
-    ListNode<T> node(val);
-    last = &node;
-    first = &node;
+    ListNode<T>* node = new ListNode<T>;
+    node->value = val;
+    last = node;
+    first = node;
 }
 
 template <typename T> 
