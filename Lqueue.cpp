@@ -17,6 +17,7 @@ class Lqueue: public Queue<T>
       void dequeue();
       bool is_empty()const;
       void clear();
+      T get_first();
 
   public:
      Lqueue<T>& operator=(const Lqueue&);
@@ -79,14 +80,12 @@ void Lqueue<T>:: enqueue(const T& val)
 {
     if(!is_empty())
     {
-        last->next = new ListNode<T>;
+        last->next = new ListNode<T>(val);
         last = last->next;
-        last->value = val;
     }
     else
     {
-        last = new ListNode<T>;
-        last->value = val;
+        last = new ListNode<T>(val);
     }
 }
 
@@ -123,6 +122,12 @@ void Lqueue<T>:: clear()
         dequeue();
     } 
 } 
+template <typename T>
+
+T Lqueue<T>:: get_first()
+{
+   return first -> value;
+}
 
 template <typename T>
 
