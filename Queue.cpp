@@ -1,4 +1,6 @@
 //Queue.h
+#pragma once
+
 #include "ListNode.h"
 
 template <typename T>
