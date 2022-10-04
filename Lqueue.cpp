@@ -1,8 +1,9 @@
+#pragma once
+
 #include "Queue.h"
 #include "ListNode.h"
 
 template <typename T> 
-
 class Lqueue: public Queue<T>
 {
   public:
@@ -15,40 +16,35 @@ class Lqueue: public Queue<T>
   public:
       void enqueue(const T&);
       void dequeue();
-      bool is_empty()const;
+      bool is_empty() const;
       void clear();
-      T get_first();
+      T front() const;
 
   public:
      Lqueue<T>& operator=(const Lqueue&);
      Lqueue<T> operator+(const Lqueue&)const;
   private:
-     ListNode<T>* first;
-     ListNode<T>* last;
+     ListNode<T>* m_front;
+     ListNode<T>* m_last;
 };
 
 template <typename T>
-
 Lqueue<T>:: Lqueue()
-        : first(nullptr)
-        , last(nullptr)
+        : m_front(nullptr)
+        , m_last(nullptr)
         {}
 
 template <typename T>
-
 Lqueue<T>:: Lqueue(const T& val)
 {
-    ListNode<T>* node = new ListNode<T>;
-    node->value = val;
-    last = node;
-    first = node;
+    ListNode<T>* node = new ListNode<T>(val); 
+    m_front = m_last = node;
 }
 
 template <typename T> 
-
 Lqueue<T>:: Lqueue(const Lqueue& obj)
 {
-    ListNode<T>* ptr = obj.first;
+    ListNode<T>* ptr = obj.m_front;
     while(ptr != nullptr)
     {
         enqueue(ptr->value);
@@ -57,17 +53,15 @@ Lqueue<T>:: Lqueue(const Lqueue& obj)
 }
 
 template <typename T>
-
 Lqueue<T>:: Lqueue(const Lqueue&& tmp)
 {
-    first = tmp.first;
-    last = tmp.last;
-    tmp.first = nullptr;
-    tmp.last = nullptr;
+    m_front = tmp.m_front;
+    m_last = tmp.m_last;
+    tmp.m_front = nullptr;
+    tmp.m_last = nullptr;
 }
 
 template <typename T>
-
 Lqueue<T>:: ~Lqueue()
 {
     clear();
@@ -75,28 +69,26 @@ Lqueue<T>:: ~Lqueue()
 }
 
 template <typename T>
-
 void Lqueue<T>:: enqueue(const T& val)
 {
     if(!is_empty())
     {
-        last->next = new ListNode<T>(val);
-        last = last->next;
+        m_last->next = new ListNode<T>(val);
+        m_last = m_last->next;
     }
     else
     {
-        last = new ListNode<T>(val);
+        m_last = m_front = new ListNode<T>(val);
     }
 }
 
 template <typename T>
-
 void Lqueue<T>:: dequeue()
 {
     if(!is_empty())
     {
-       ListNode<T>* ptr = first;
-       first = first->next;
+       ListNode<T>* ptr = m_front;
+       m_front = m_front->next;
        delete ptr;
        ptr = nullptr;
     }
@@ -107,46 +99,43 @@ void Lqueue<T>:: dequeue()
 }
 
 template <typename T>
-
 bool Lqueue<T>:: is_empty()const
 {
-    return ((last == nullptr) && (first == nullptr));
+    return ((m_last == nullptr) && (m_front == nullptr));
 }
 
 template <typename T>
-
 void Lqueue<T>:: clear()
 {
-    while(!is_empty())
+    while(m_front != nullptr)
     {
         dequeue();
     } 
+    m_front = m_last = nullptr;
 } 
 template <typename T>
-
-T Lqueue<T>:: get_first()
+T Lqueue<T>:: front() const
 {
-   return first -> value;
+   return m_front -> value;
 }
 
 template <typename T>
-
 Lqueue<T>& Lqueue<T>:: operator=(const Lqueue& obj)
 {
-    Lqueue<T>* ptr = this;
-    Lqueue<T> res(obj);
-    this = &res;
-    delete ptr;
-    ptr = nullptr;
+    ListNode<T>* cpy = obj.m_front;
+    while(cpy != nullptr)
+    {
+        enqueue(cpy->value);
+        cpy = cpy -> next;
+    }
     return *this;
 }
 
 template <typename T>
-
 Lqueue<T> Lqueue<T>:: operator+(const Lqueue& obj)const
 {
     Lqueue<T> res = *this;
-    ListNode<T>* ptr = obj.first;
+    ListNode<T>* ptr = obj.m_front;
     while(ptr != nullptr)
     {
         res.enqueue(ptr -> value);
