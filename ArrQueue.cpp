@@ -3,6 +3,7 @@
 
 #include "queue.h"
 
+
 template <typename T>
 class DataQueue: public Queue<T>
 {
@@ -19,6 +20,7 @@ public:
     virtual T front() const;
     int size() const;
     virtual void clear();
+    virtual bool full() const;
 
 private:
     int m_size;
@@ -29,18 +31,18 @@ private:
 
 template <typename  T>
 DataQueue<T>::DataQueue(int size)
-              : m_size(size + 1)
-              , m_front(1)
-              , m_rear(0)
-              , m_arr(new T [m_size])
+        : m_size(size + 1)
+        , m_front(1)
+        , m_rear(0)
+        , m_arr(new T [m_size])
 {
     assert(m_arr);
 }
 
 template <typename  T>
 DataQueue<T>::DataQueue(const DataQueue& obj)
-              : m_front(1)
-              , m_rear(0)
+        : m_front(1)
+        , m_rear(0)
 {
     m_size = obj.m_size;
     m_arr = new T [m_size];
@@ -54,10 +56,10 @@ DataQueue<T>::DataQueue(const DataQueue& obj)
 
 template <typename  T>
 DataQueue<T>::DataQueue(const DataQueue&& tmp)
-             : m_size(tmp.m_size)
-             , m_front(tmp.m_front)
-             , m_rear(tmp.m_rear)
-             , m_arr(tmp.m_arr)
+        : m_size(tmp.m_size)
+        , m_front(tmp.m_front)
+        , m_rear(tmp.m_rear)
+        , m_arr(tmp.m_arr)
 {
     tmp.m_arr = nullptr;
     tmp.m_size = 0;
@@ -70,14 +72,21 @@ DataQueue<T>::~DataQueue()
 {
     delete [] m_arr;
     m_arr = nullptr;
-    std::cout << "arrQueue destructor" << std::endl;
+    std::cout << "ArrQueue destructor" << std::endl;
 }
 
 template <typename  T>
 void DataQueue<T>::enqueue(const T& item)
 {
-    m_rear = (m_rear + 1) % m_size;
-    m_arr[m_rear] = item;
+    if(!full())
+    {
+        m_rear = (m_rear + 1) % m_size;
+        m_arr[m_rear] = item;
+    }
+    else
+    {
+       throw "index out of range";
+    }
 }
 
 template <typename  T>
@@ -120,3 +129,10 @@ void DataQueue<T>::clear()
         dequeue();
     }
 }
+
+template <typename T>
+bool DataQueue<T>::full() const
+{
+    return size() == m_size - 1;
+}
+
