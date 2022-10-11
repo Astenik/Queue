@@ -14,8 +14,14 @@ int main()
     
     Lqueue<int> k;
     k = obj;
+    
+    k.enqueue(9);
+    k.dequeue();
+    
     std::cout << k.is_empty() << std::endl;
     std::cout << k.front() << std::endl;
+    
     obj.clear();
+    
     return 0;
 }
