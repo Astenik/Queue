@@ -4,45 +4,46 @@
 #include "Queue.h"
 #include "ListNode.h"
 
-template <typename T> 
+template <typename T>
 class Lqueue: public Queue<T>
 {
-  public:
-     Lqueue();
-     Lqueue(const T&);
-     Lqueue(const Lqueue&);
-     Lqueue(const Lqueue&&);
-     ~Lqueue();
-    
-  public:
-      void enqueue(const T&);
-      void dequeue();
-      bool is_empty() const;
-      void clear();
-      T front() const;
+public:
+    Lqueue();
+    Lqueue(const T&);
+    Lqueue(const Lqueue&);
+    Lqueue(const Lqueue&&);
+    ~Lqueue();
 
-  public:
-     Lqueue<T>& operator=(const Lqueue&);
-     Lqueue<T> operator+(const Lqueue&)const;
-  private:
-     ListNode<T>* m_front;
-     ListNode<T>* m_last;
+public:
+    void enqueue(const T&);
+    void dequeue();
+    bool is_empty() const;
+    void clear();
+    T front() const;
+    virtual bool full() const;
+
+public:
+    Lqueue<T>& operator=(const Lqueue&);
+    Lqueue<T> operator+(const Lqueue&)const;
+private:
+    ListNode<T>* m_front;
+    ListNode<T>* m_last;
 };
 
 template <typename T>
 Lqueue<T>:: Lqueue()
         : m_front(nullptr)
         , m_last(nullptr)
-        {}
+{}
 
 template <typename T>
 Lqueue<T>:: Lqueue(const T& val)
 {
-    ListNode<T>* node = new ListNode<T>(val); 
+    ListNode<T>* node = new ListNode<T>(val);
     m_front = m_last = node;
 }
 
-template <typename T> 
+template <typename T>
 Lqueue<T>:: Lqueue(const Lqueue& obj)
 {
     ListNode<T>* ptr = obj.m_front;
@@ -88,10 +89,10 @@ void Lqueue<T>:: dequeue()
 {
     if(!is_empty())
     {
-       ListNode<T>* ptr = m_front;
-       m_front = m_front->next;
-       delete ptr;
-       ptr = nullptr;
+        ListNode<T>* ptr = m_front;
+        m_front = m_front->next;
+        delete ptr;
+        ptr = nullptr;
     }
     else
     {
@@ -111,13 +112,13 @@ void Lqueue<T>:: clear()
     while(m_front != nullptr)
     {
         dequeue();
-    } 
+    }
     m_front = m_last = nullptr;
-} 
+}
 template <typename T>
 T Lqueue<T>:: front() const
 {
-   return m_front -> value;
+    return m_front -> value;
 }
 
 template <typename T>
@@ -143,4 +144,10 @@ Lqueue<T> Lqueue<T>:: operator+(const Lqueue& obj)const
         ptr = ptr -> next;
     }
     return res;
+}
+
+template <typename T>
+bool Lqueue<T>::full() const
+{
+    return false;
 }
