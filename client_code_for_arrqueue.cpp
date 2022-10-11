@@ -4,14 +4,16 @@
 int main()
 {
     DataQueue<int> obj(4);
-    std::cout << obj.is_empty() << std::endl;
+    int x;
+    while(std::cin >> x)
+    {
+        obj.enqueue(x);
+        if(obj.full())
+        {
+            break;
+        }
 
-    obj.enqueue((1));
-    obj.enqueue((2));
-    obj.enqueue((3));
-    obj.enqueue((4));
-    std::cout << obj.is_empty() << std::endl;
-
+    }
     obj.dequeue();
     obj.dequeue();
 
@@ -23,6 +25,7 @@ int main()
         std::cout << obj.front() << " ";
         obj.dequeue();
     }
-
+    std::cout << obj.front() << " ";
+    obj.dequeue();
     return 0;
 }
